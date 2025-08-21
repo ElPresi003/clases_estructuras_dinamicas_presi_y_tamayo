@@ -1,0 +1,13 @@
+{
+	"Estructura para c++": {
+		"prefix": "cpp",
+		"body": [
+			"#include <iostream>",
+			"",
+			"int main () {",
+			"return 0;",
+			"}"
+		],
+		"description": "Estructura para c++"
+	}
+}
