@@ -4,100 +4,100 @@
 #include <string>
 #include <vector>
 
-// Declaracion de funciones
+// Structure to hold all coupon-related information for one person
+struct InformacionCupon
+{
+    int cant_cupones;           // Amount of coupons to generate
+    std::string nombre_persona; // Name of the person
+    std::vector<std::pair<std::string, bool>> cupon_premio;
+    // Each element stores (coupon, isWinner)
+};
+
+// Function declarations
 std::string generateCoupon(std::string prefijo);
-void checkCoupon(std::string identificador_cupon);
+bool isWinner(std::string identificador_cupon);
 bool checkLength(int longitud);
-std::vector<std::string> cupones_generados();
 
 int main()
 {
-    // Pedir y generar varios cupones
-    std::vector<std::string> lista_cupones = cupones_generados();
+    // Create the structure to store the information
+    InformacionCupon info;
 
-    // Mostrar todos los cupones generados
-    std::cout << "\n=== Cupones generados ===" << std::endl;
-    for (size_t i = 0; i < lista_cupones.size(); i++)
+    // Ask for the name of the person
+    std::cout << "Enter your name: ";
+    std::cin >> info.nombre_persona;
+
+    // Ask for the amount of coupons to generate
+    std::cout << "How many coupons do you want to generate?: ";
+    std::cin >> info.cant_cupones;
+
+    // Loop to generate all coupons and store them inside the struct
+    for (int i = 0; i < info.cant_cupones; i++)
     {
-        std::cout << "Cupon " << i + 1 << ": " << lista_cupones[i] << std::endl;
+        std::string prefijo;
+
+        // Ask for a prefix of exactly 3 characters
+        do
+        {
+            std::cout << "Enter the prefix for coupon " << i + 1 << " (3 letters): ";
+            std::cin >> prefijo;
+        } while (!checkLength(prefijo.length()));
+
+        // Generate coupon with prefix + random number
+        std::string cupon = generateCoupon(prefijo);
+
+        // Extract the numeric part to check if it is a winner
+        std::string numeros = cupon.substr(prefijo.length());
+        bool ganador = isWinner(numeros);
+
+        // Store both coupon and result in the vector of the struct
+        info.cupon_premio.push_back({cupon, ganador});
+
+        // Show immediate result
+        std::cout << "Your generated coupon is: " << cupon << std::endl;
+        std::cout << "Result: " << (ganador ? "WINNER!" : "Not a winner") << std::endl;
+        std::cout << "-----------------------------" << std::endl;
+    }
+
+    // Show all coupons stored in the struct
+    std::cout << "\n=== Coupons of " << info.nombre_persona << " ===" << std::endl;
+    int contador = 1;
+    for (auto &par : info.cupon_premio)
+    {
+        std::cout << "Coupon " << contador << ": " << par.first
+                  << " | Winner: " << (par.second ? "YES" : "NO") << std::endl;
+        contador++;
     }
 
     return 0;
 }
 
-// Generar el cupon con prefijo + numero aleatorio de 3 digitos
+// Function that generates a coupon with prefix + random 3-digit number
 std::string generateCoupon(std::string prefijo)
 {
-    srand(time(0));                            // Inicializar semilla de numeros aleatorios
-    int numero_aleatorio = 100 + rand() % 900; // Numero aleatorio entre 100 y 999
+    srand(time(0));                            // Initialize random seed
+    int numero_aleatorio = 100 + rand() % 900; // Random number between 100 and 999
     return prefijo + std::to_string(numero_aleatorio);
 }
 
-// Verificar si el cupon es premiado
-void checkCoupon(std::string identificador_cupon)
+// Function that checks if the coupon is a winning one
+bool isWinner(std::string identificador_cupon)
 {
-    int premio;
-    int numero = std::stoi(identificador_cupon); // Convertir string a entero
-
-    std::cout << "El numero del cupon es: " << numero << std::endl;
-
-    premio = numero % 2;
-    if (premio == 0)
-    {
-        std::cout << "El boleto esta premiado" << std::endl;
-    }
-    else
-    {
-        std::cout << "El cupon no esta premiado" << std::endl;
-    }
+    int numero = std::stoi(identificador_cupon); // Convert string to integer
+    return (numero % 2 == 0);                    // Winner if even
 }
 
-// Validar la longitud del prefijo
+// Function to check if the prefix has exactly 3 characters
 bool checkLength(int longitud)
 {
     if (longitud != 3)
     {
-        std::cout << "Longitud de prefijo invalida, por favor ingresa un prefijo de 3 letras" << std::endl;
-        return false; // No es valido
+        std::cout << "Invalid prefix length, please enter a prefix of 3 letters" << std::endl;
+        return false; // Not valid
     }
     else
     {
-        std::cout << "Prefijo valido, se genera el cupon..." << std::endl;
-        return true; // Es valido
+        std::cout << "Valid prefix, generating coupon..." << std::endl;
+        return true; // Valid
     }
-}
-
-// Nueva funcion para pedir y generar varios cupones
-std::vector<std::string> cupones_generados()
-{
-    int cantidad;
-    std::cout << "Cuantos cupones desea generar?: ";
-    std::cin >> cantidad;
-
-    std::vector<std::string> lista_cupones;
-    std::string prefijo, cupon;
-
-    for (int i = 0; i < cantidad; i++)
-    {
-        // Bucle para asegurarse que el prefijo tiene exactamente 3 caracteres
-        do
-        {
-            std::cout << "Ingrese el prefijo del cupon " << i + 1 << " (3 letras): ";
-            std::cin >> prefijo;
-        } while (!checkLength(prefijo.length()));
-
-        // Generar y guardar cupon
-        cupon = generateCoupon(prefijo);
-        lista_cupones.push_back(cupon);
-
-        // Mostrar el resultado inmediato
-        std::cout << "Su cupon generado es: " << cupon << std::endl;
-
-        // Extraer la parte numerica y verificar premio
-        std::string numeros = cupon.substr(prefijo.length());
-        checkCoupon(numeros);
-        std::cout << "-----------------------------" << std::endl;
-    }
-
-    return lista_cupones;
 }

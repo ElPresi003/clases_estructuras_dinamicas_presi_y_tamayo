@@ -1,0 +1,25 @@
+#include <iostream>
+
+int main()
+{
+    int arreglo[] = {10, 20, 30, 40, 50};
+    int tamanio = sizeof(arreglo) / sizeof(arreglo[0]);
+    int suma = 0;
+
+    std::cout << "=== Usando punteros ===" << std::endl;
+
+    int *ptr = arreglo;
+    int *fin = arreglo + tamanio;
+
+    while (ptr < fin)
+    {
+        std::cout << "Valor " << *ptr
+                  << " : Direccion " << ptr << std::endl;
+        suma += *ptr;
+        ptr++;
+    }
+
+    std::cout << "Suma total: " << suma << std::endl;
+
+    return 0;
+}

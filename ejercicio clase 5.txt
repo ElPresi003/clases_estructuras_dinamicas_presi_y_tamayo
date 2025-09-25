@@ -1,0 +1,13 @@
+Hacer un programa que utilice un arreglo de enteros, el programa debe recorrer el arreglo, mostrar el valor y direccion de cada elemento
+y al final calcular la suma de sus elementos
+
+Ejemplo de salida:
+Valor 10: Direccion 0xf6a6s6as6dc
+valor 20: Direccion **********
+Asi hasta valor 50
+Suma total: 150
+
+El ejercicio se realizara en dos formas
+*Usando indices, implementar el recorrido usando un ciclo for sin emplear punteros "Arreglo[0]"
+*Usando punteros, implementar el recorrido usando un puntero y un ciclo while
+sin hacer uso de los indices *ptr
